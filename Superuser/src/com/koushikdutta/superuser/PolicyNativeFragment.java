@@ -19,7 +19,6 @@ package com.koushikdutta.superuser;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,15 +28,6 @@ import com.koushikdutta.widgets.NativeFragment;
 
 @SuppressLint("NewApi")
 public class PolicyNativeFragment extends NativeFragment<PolicyFragmentInternal> {
-    ContextThemeWrapper mWrapper;
-    @Override
-    public Context getContext() {
-        if (mWrapper != null)
-            return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark_LargeIcon);
-        return mWrapper;
-    }
-
     protected class FragmentInternal extends PolicyFragmentInternal {
         public FragmentInternal(FragmentInterfaceWrapper fragment) {
             super(fragment);

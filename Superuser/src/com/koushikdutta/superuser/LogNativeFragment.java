@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,14 +28,6 @@ import com.koushikdutta.widgets.NativeFragment;
 
 @SuppressLint("NewApi")
 public class LogNativeFragment extends NativeFragment<LogFragmentInternal> {
-    ContextThemeWrapper mWrapper;
-    public Context getContext() {
-        if (mWrapper != null)
-            return mWrapper;
-        mWrapper = new ContextThemeWrapper(super.getContext(), R.style.SuperuserDark);
-        return mWrapper;
-    }
-
     @Override
     public LogFragmentInternal createFragmentInterface() {
         return new LogFragmentInternal(this) {
