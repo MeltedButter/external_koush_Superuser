@@ -1,17 +1,5 @@
 package com.koushikdutta.superuser.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.security.MessageDigest;
-
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,6 +11,17 @@ import android.util.Log;
 
 import com.koushikdutta.superuser.Helper;
 import com.koushikdutta.superuser.db.SuperuserDatabaseHelper;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
 
 public class Settings {
     static final String TAG = "Superuser";
@@ -318,7 +317,7 @@ public class Settings {
     public static final int SUPERUSER_ACCESS_APPS_AND_ADB = 3;
     public static int getSuperuserAccess() {
         try {
-            Class c = Class.forName("android.os.SystemProperties");
+            Class<?> c = Class.forName("android.os.SystemProperties");
             Method m = c.getMethod("get", String.class);
             String value = (String)m.invoke(null, "persist.sys.root_access");
             int val = Integer.valueOf(value);
@@ -339,18 +338,9 @@ public class Settings {
     
     public static void setSuperuserAccess(int mode) {
         try {
-            if (android.os.Process.myUid() == android.os.Process.SYSTEM_UID) {
-                Class c = Class.forName("android.os.SystemProperties");
-                Method m = c.getMethod("set", String.class, String.class);
-                m.invoke(null, "persist.sys.root_access", String.valueOf(mode));
-                if (mode == getSuperuserAccess()) return;
-            }
-            String command = "setprop persist.sys.root_access " + mode;
-            Process p = Runtime.getRuntime().exec("su");
-            p.getOutputStream().write(command.getBytes());
-            p.getOutputStream().close();
-            int ret = p.waitFor();
-            if (ret != 0) Log.w(TAG, "su failed: " + ret);
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("set", String.class, String.class);
+            m.invoke(null, "persist.sys.root_access", String.valueOf(mode));
         }
         catch (Exception ex) {
             Log.w(TAG, "got exception: ", ex);
@@ -364,27 +354,5 @@ public class Settings {
     
     public static final void setCheckSuQuietCounter(Context context, int counter) {
         setInt(context, CHECK_SU_QUIET, counter);
-    }
-    
-    private static final String KEY_THEME = "theme";
-    public static final int THEME_LIGHT = 0;
-    public static final int THEME_DARK = 1;
-    public static void applyDarkThemeSetting(Activity activity, int dark) {
-        if (!"com.koushikdutta.superuser".equals(activity.getPackageName()))
-            return;
-        try {
-            if (getTheme(activity) == THEME_DARK)
-                activity.setTheme(dark);
-        }
-        catch (Exception e) {
-        }
-    }
-    
-    public static final int getTheme(Context context) {
-        return getInt(context, KEY_THEME, THEME_LIGHT);
-    }
-    
-    public static final void setTheme(Context context, int theme) {
-        setInt(context, KEY_THEME, theme);
     }
 }

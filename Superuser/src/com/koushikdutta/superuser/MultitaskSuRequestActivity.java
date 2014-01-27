@@ -16,11 +16,6 @@
 
 package com.koushikdutta.superuser;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.util.HashMap;
-
-import junit.framework.Assert;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -36,7 +31,6 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,12 +38,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.koushikdutta.superuser.db.SuDatabaseHelper;
 import com.koushikdutta.superuser.db.UidPolicy;
 import com.koushikdutta.superuser.util.Settings;
-import com.koushikdutta.superuser.util.SuHelper;
+
+import junit.framework.Assert;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.util.HashMap;
 
 @SuppressLint("ValidFragment")
 public class MultitaskSuRequestActivity extends FragmentActivity {
@@ -284,6 +282,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     private final static int SU_PROTOCOL_PARAM_MAX = 20;
     private final static int SU_PROTOCOL_NAME_MAX = 20;
     private final static int SU_PROTOCOL_VALUE_MAX_DEFAULT = 256;
+    @SuppressWarnings("serial")
     private final static HashMap<String, Integer> SU_PROTOCOL_VALUE_MAX = new HashMap<String, Integer>() {
         {
             put("command", 2048);
@@ -330,11 +329,11 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                             break;
                     }
                     
-                    int protocolVersion = payload.getAsInteger("version");
+                    //int protocolVersion = payload.getAsInteger("version");
                     mCallerUid = payload.getAsInteger("from.uid");
                     mDesiredUid = payload.getAsByte("to.uid");
                     mDesiredCmd = payload.getAsString("command");
-                    String calledBin = payload.getAsString("from.bin");
+                    //String calledBin = payload.getAsString("from.bin");
                     mPid = payload.getAsInteger("pid");
                     runOnUiThread(new Runnable() {
                         @Override
@@ -342,12 +341,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
                             mRequestReady = true;
                             requestReady();
                         }
-                    });                    
-
-                    if ("com.koushikdutta.superuser".equals(getPackageName())) {
-                        if (!SuHelper.CURRENT_VERSION.equals(payload.getAsString("binary.version")))
-                            SuCheckerReceiver.doNotification(MultitaskSuRequestActivity.this);
-                    }
+                    });
                 }
                 catch (Exception ex) {
                     Log.i(LOGTAG, ex.getMessage(), ex);
@@ -373,7 +367,6 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
     LocalSocket mSocket;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
@@ -464,36 +457,7 @@ public class MultitaskSuRequestActivity extends FragmentActivity {
         mAllow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Settings.isPinProtected(MultitaskSuRequestActivity.this)) {
-                    approve();
-                    return;
-                }
-                
-                ViewGroup ready = (ViewGroup)findViewById(R.id.root);
-                final int until = getUntil();
-                ready.removeAllViews();
-                
-                PinViewHelper pin = new PinViewHelper(getLayoutInflater(), (ViewGroup)findViewById(android.R.id.content), null) {
-                    @Override
-                    public void onEnter(String password) {
-                        super.onEnter(password);
-                        if (Settings.checkPin(MultitaskSuRequestActivity.this, password)) {
-                            mAllow.setEnabled(false);
-                            mDeny.setEnabled(false);
-                            handleAction(true, until);
-                        }
-                        else {
-                            Toast.makeText(MultitaskSuRequestActivity.this, getString(R.string.incorrect_pin), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onCancel() {
-                        super.onCancel();
-                        deny();
-                    }
-                };
-                
-                ready.addView(pin.getView());
+                approve();
             }
         });
         mDeny.setOnClickListener(new OnClickListener() {

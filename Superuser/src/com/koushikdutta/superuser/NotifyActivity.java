@@ -16,8 +16,6 @@
 
 package com.koushikdutta.superuser;
 
-import com.koushikdutta.superuser.util.Settings;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -31,7 +29,6 @@ import android.widget.TextView;
 public class NotifyActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Settings.applyDarkThemeSetting(this, R.style.RequestThemeDark);
         super.onCreate(savedInstanceState);
         
         setContentView(R.layout.notify);
