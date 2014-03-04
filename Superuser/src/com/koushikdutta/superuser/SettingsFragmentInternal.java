@@ -38,14 +38,14 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
     protected int getListFragmentResource() {
         return R.layout.settings;
     }
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState, View view) {
         super.onCreate(savedInstanceState, view);
-        
+
         // NOTE to future koush
         // dark icons use the color #f3f3f3
-        
+
         addItem(R.string.security, new ListItem(this, R.string.superuser_access, 0, 0) {
             void update() {
                 switch (Settings.getSuperuserAccess()) {
@@ -69,11 +69,11 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
             {
                 update();
             }
-            
+
             @Override
             public void onClick(View view) {
                 super.onClick(view);
-                
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.superuser_access);
                 String[] items = new String[] { getString(R.string.access_disabled), getString(R.string.apps_only), getString(R.string.adb_only), getString(R.string.apps_and_adb) };
@@ -100,7 +100,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 builder.create().show();
             }
         }).setAttrDrawable(R.attr.toggleIcon);
-        
+
         if (Settings.getMultiuserMode(getActivity()) != Settings.MULTIUSER_MODE_NONE) {
             addItem(R.string.security, new ListItem(this, R.string.multiuser_policy, 0) {
                 void update() {
@@ -116,7 +116,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                         res = R.string.multiuser_user_summary;
                         break;
                     }
-                    
+
                     if (!Helper.isAdminUser(getActivity())) {
                         setEnabled(false);
                         String s = "";
@@ -129,15 +129,15 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                             setSummary(res);
                     }
                 }
-                
+
                 {
                     update();
                 }
-                
+
                 @Override
                 public void onClick(View view) {
                     super.onClick(view);
-                    
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setTitle(R.string.multiuser_policy);
                     String[] items = new String[] { getString(R.string.multiuser_owner_only), getString(R.string.multiuser_owner_managed), getString(R.string.multiuser_user) };
@@ -162,7 +162,7 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                 }
             }).setAttrDrawable(R.attr.multiuserIcon);
         }
-        
+
         addItem(R.string.security, new ListItem(this, R.string.declared_permission, R.string.declared_permission_summary) {
             @Override
             public void onClick(View view) {
@@ -188,14 +188,14 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     break;
                 }
             }
-            
+
             {
                 update();
             }
             @Override
             public void onClick(View view) {
                 super.onClick(view);
-                
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.automatic_response);
                 String[] items = new String[] { getString(R.string.prompt), getString(R.string.deny), getString(R.string.allow) };
@@ -268,14 +268,14 @@ public class SettingsFragmentInternal extends BetterListFragmentInternal {
                     break;
                 }
             }
-            
+
             {
                 update();
             }
             @Override
             public void onClick(View view) {
                 super.onClick(view);
-                
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(R.string.notifications);
                 String[] items = new String[] { getString(R.string.none), getString(R.string.toast), getString(R.string.notification) };

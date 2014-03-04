@@ -34,7 +34,7 @@ public class SuReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         if (intent == null)
             return;
-        
+
         String command = intent.getStringExtra("command");
         if (command == null)
             return;
@@ -82,7 +82,7 @@ public class SuReceiver extends BroadcastReceiver {
             .setContentTitle(context.getString(R.string.superuser))
             .setContentText(toast)
             .setSmallIcon(R.drawable.ic_stat_notification);
-            
+
             NotificationManager nm = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
             nm.notify(NOTIFICATION_ID, builder.build());
             break;
@@ -91,6 +91,6 @@ public class SuReceiver extends BroadcastReceiver {
             break;
         }
     }
-    
+
     private static final int NOTIFICATION_ID = 4545;
 }
